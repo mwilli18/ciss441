@@ -1,0 +1,43 @@
+import csv
+import json
+
+"""
+Who: Madysen Williams
+When: 01/15/2019
+What: a1 Assignment for CISS-441: Business Intelligence
+
+"""
+
+crime_data = [] # To collect data for printing at the very end.
+crime_total_count = 0 # For counting the data rows
+with open('crime.csv', 'r') as csvfile:
+
+    # parse csv file pointer into crime_stream
+
+    crime_stream = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+
+    # iterate over crime_stream to process.
+    
+    for crime_data_row in crime_stream:
+        crime_total_count += 1
+
+        # Variables for each column header:
+
+        incident_id = crime_data_row['INCIDENT_ID'] 
+        offense_category_id = crime_data_row['OFFENSE_CATEGORY_ID']
+        neighborhood_id = crime_data_row['NEIGHBORHOOD_ID']
+    
+
+        # Only showing the first 20 rows:
+
+        if crime_total_count <= 20:
+            print(incident_id, offense_category_id, neighborhood_id)
+            crime_data.append({incident_id: [offense_category_id, 
+                neighborhood_id] }) 
+
+print("I found " + str(crime_total_count) + " crimes.")
+print("I'm all done processing all of this lawbreaking activity!")
+
+         #Prints json:
+
+print(json.dumps(crime_data))
