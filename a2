@@ -1,0 +1,72 @@
+import json
+import csv
+import sqlite3
+import sys
+
+db_file = 'mall-customers3.db'
+conn = sqlite3.connect(db_file)
+
+def create():
+    
+    c = conn.cursor()
+    sql_str = """
+        create table if not exists Customers3 (
+        CustomerID integer, 
+        Gender text,
+        Age integer,
+        Income integer,
+        SpendScore integer);
+        """
+
+    c.execute(sql_str)
+    conn.commit()
+    print ("Creating database output from a CSV cataloguing mall shopper statistics.")
+create()
+
+
+
+
+def process():
+
+    c = conn.cursor()
+
+    with open('Mall_Customers.csv', 'r') as csvfile:
+
+        # parse csv file pointer into hero_stream
+        customers_stream = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+
+        # interate over hero_stream to process. 
+        for r_ct, customer_data_row in enumerate(customers_stream):
+
+            u_customerid = customer_data_row['CustomerID']
+            u_gender = customer_data_row['Gender']
+            u_age = customer_data_row['Age']
+            u_income = customer_data_row['Income']
+            u_spendscore = customer_data_row['SpendScore']
+        
+            print(u_customerid, u_gender, u_age, u_income, u_spendscore)
+
+
+            # only show the first 20 rows. 
+            if r_ct <= 50:
+                strsql = """
+                    insert into Customers3 ( CustomerID, Gender, Age, Income, SpendScore) values (
+                    '{u_customerid}',
+                    '{u_gender}',
+                    '{u_age}',
+                    '{u_income}',
+                    '{u_spendscore}'
+                    );
+                """.format(
+                    u_customerid=u_customerid,
+                    u_gender=u_gender,
+                    u_age=u_age,
+                    u_income=u_income,
+                    u_spendscore=u_spendscore
+                )
+                c.execute(strsql)
+                conn.commit()
+
+                
+
+process()
