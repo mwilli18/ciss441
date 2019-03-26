@@ -1,0 +1,8 @@
+import requests
+
+url = 'http://www.city-data.com/city/Alto-Georgia.html'
+
+req = requests.get(url)
+print(url, req.status_code)
+print(req.text)
+
