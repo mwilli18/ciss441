@@ -1,0 +1,19 @@
+import requests
+from bs4 import BeautifulSoup
+
+url = 'http://www.city-data.com/city/Alto-Georgia.html'
+
+req = requests.get(url)
+webcontent = req.text 
+soup = BeautifulSoup(webcontent, "html.parser")
+
+### | Title of the website:
+
+ptitle = soup.title
+print('Title of the web page: ', ptitle.string)
+
+### | See all the hyper links:
+for lnkct, link in enumerate(soup.find_all('a')):
+    lnk = link.get('href')
+    if lnk and lnkct < 30:
+        print('   ' + lnk)
