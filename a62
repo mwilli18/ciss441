@@ -1,0 +1,42 @@
+import sqlite3
+
+DB_FILE = 'payroll_dc_small.db'
+conn = sqlite3.connect(DB_FILE)
+
+
+def main():
+    print('a6 - standard report 2')
+    strsql = """select 
+                    ed.edlvlt education_level,
+                    max(ft.agelvl) max_age, 
+                    min(ft.agelvl) min_age, 
+                    count(ft.agelvl) people_count
+                from factdata_mar2016 ft, edlvl ed
+                where ed.edlvl = ft.edlvl
+                group by education_level
+                order by agelvl desc
+                limit 20;
+        """
+    cursor = conn.execute(strsql)
+    # the formating string for each row of the report
+    report_string_format = '{0:<40}\t{1:<10}{2:<10}{3:<10}'
+    # printing the header of the report. 
+    print(
+        report_string_format.format(
+            'education_level', 'max_age', 'min_age', 'people_count'
+            )
+        )
+
+    for row in cursor:  
+        education_level, max_age, min_age, people_count = row
+        print(
+            report_string_format.format(
+                education_level, max_age, min_age, people_count
+                )
+            )
+
+    cursor.close()      # close cursor
+    conn.close()       # close connection to the db
+
+if __name__ == "__main__":
+    main()
